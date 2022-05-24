@@ -91,4 +91,21 @@ public class SolutionServiceImpl implements SolutionService {
         solutionRepository.save(solution);
         return new MessageResponseDto("Сохранено");
     }
+
+    @Override
+    public MessageResponseDto update(Integer taskId, Integer solutionId, String text, String username) {
+        User user = userRepository.findByUsername(username)
+                .get();
+        Solution solution = solutionRepository.getById(solutionId);
+        solution.setStatus(EStatus.ON_INSPECTION);
+        solution.setText(text);
+        solution.setDateTime(LocalDateTime.now());
+        List<FileDB> files = fileStorageService.getFilesByUserAndTaskId(taskId, user.getId());
+        for (FileDB file : files) {
+            file.setSolution(solution);
+            fileDBRepository.save(file);
+        }
+        solutionRepository.save(solution);
+        return new MessageResponseDto("Решение отправлено!");
+    }
 }

@@ -5,16 +5,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import project.diploma.agreement.domain.FileDB;
-import project.diploma.agreement.domain.Solution;
-import project.diploma.agreement.domain.Task;
-import project.diploma.agreement.domain.User;
 import project.diploma.agreement.dto.MessageResponseDto;
 import project.diploma.agreement.repository.FileDBRepository;
 import project.diploma.agreement.repository.SolutionRepository;
 import project.diploma.agreement.service.FileStorageService;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;

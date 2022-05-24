@@ -51,6 +51,14 @@ public class RestSolutionController {
 
     }
 
+    @GetMapping("/update")
+    public ResponseEntity<MessageResponseDto> updateSolution(@RequestParam Integer taskId,
+                                                             @RequestParam Integer solutionId,
+                                                             @RequestParam String text,
+                                                             @RequestParam String username) {
+        return new ResponseEntity<>(solutionService.update(taskId, solutionId, text, username), HttpStatus.OK);
+    }
+
     @GetMapping("/agreement")
     public ResponseEntity<MessageResponseDto> agreementSolution(@RequestParam Integer solId,
                                                                 @RequestParam Integer mark,

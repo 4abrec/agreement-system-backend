@@ -28,4 +28,10 @@ public interface UserService {
 
     MessageResponseDto updateStudent(UpdateUserDto userDto);
 
+    MessageResponseDto updateAdmin(UpdateAdminDto adminDto);
+
+    MessageResponseDto addChat(String senderUsername, String recipientUsername);
+
+    List<User> findAllUsersChat(String username);
+
 }

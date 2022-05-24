@@ -50,7 +50,6 @@ public class RestModuleController {
     @PostMapping("/update")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<MessageResponseDto> update(@RequestBody UpdateModuleDto module) throws InterruptedException {
-        System.out.println("Схавал");
         return new ResponseEntity<>(moduleService.updateModule(module), HttpStatus.OK);
     }
 

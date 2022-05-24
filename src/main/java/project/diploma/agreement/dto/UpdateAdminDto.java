@@ -3,15 +3,12 @@ package project.diploma.agreement.dto;
 import lombok.Data;
 
 @Data
-public class RegistrationDto {
+public class UpdateAdminDto {
 
     private String username;
-    private String password;
     private String fio;
-    private String university;
-    private String groupNumber;
-    private String phoneNumber;
-    private String address;
     private String position;
-    private String role;
+    private String address;
+    private String university;
+    private String phoneNumber;
 }

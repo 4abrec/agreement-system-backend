@@ -19,5 +19,6 @@ public class UserDto {
     private String address;
     private String position;
     private String phoneNumber;
+    private String photoUrl;
     private Set<Role> roles;
 }

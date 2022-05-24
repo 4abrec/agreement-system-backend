@@ -1,5 +1,6 @@
 package project.diploma.agreement.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -14,7 +17,7 @@ import java.util.Set;
 @Table(name = "users")
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"roles", "modules", "solutions"})
+@EqualsAndHashCode(exclude = {"roles", "modules", "solutions", "subscribers", "subscriptions"})
 public class User implements Serializable {
 
     @Id
@@ -46,6 +49,12 @@ public class User implements Serializable {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Column(name = "photo_url")
+    private String photoUrl;
+
+    @OneToMany(mappedBy = "user")
+    private List<ImageDB> image = new ArrayList<>();
+
     @JsonManagedReference
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -64,9 +73,30 @@ public class User implements Serializable {
     )
     private List<Module> modules;
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_subscriptions",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "subscriber_id") }
+    )
+    @JsonIgnoreProperties({"subscribers", "subscriptions"})
+    private Set<User> subscribers = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_subscriptions",
+            joinColumns = { @JoinColumn(name = "subscriber_id") },
+            inverseJoinColumns = { @JoinColumn(name = "user_id") }
+    )
+    @JsonIgnoreProperties({"subscriptions", "subscribers"})
+    private Set<User> subscriptions = new HashSet<>();
+
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
     private List<Solution> solutions;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "senderUser")
+    private List<Message> messages;
 
     public User(String username, String password, String fio) {
         this.username = username;

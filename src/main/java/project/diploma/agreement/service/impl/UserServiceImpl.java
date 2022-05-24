@@ -101,12 +101,27 @@ public class UserServiceImpl implements UserService{
                 roles.add(roleTeacher);
                 break;
         }
-        if (registrationDto.getGroupNumber() != null)
+        if (registrationDto.getGroupNumber() != null) {
             user.setGroupNumber(registrationDto.getGroupNumber());
-        if (registrationDto.getPhoneNumber() != null)
+        } else {
+            user.setGroupNumber("Не указано");
+        }
+        if (registrationDto.getPhoneNumber() != null) {
             user.setPhoneNumber(registrationDto.getPhoneNumber());
-        if (registrationDto.getUniversity() != null)
+        } else {
+            user.setPhoneNumber("Не указано");
+        }
+        if (registrationDto.getUniversity() != null) {
             user.setUniversity(registrationDto.getUniversity());
+        } else {
+            user.setUniversity("Не указано");
+        }
+        if (registrationDto.getAddress() == null) {
+            user.setAddress("Не указано");
+        }
+        if (registrationDto.getPosition() == null) {
+            user.setPosition("Не указано");
+        }
         user.setRoles(roles);
         userRepository.save(user);
         return new MessageResponseDto("Пользователь " + user.getUsername() + " успешно зарегистрирован!");
@@ -138,7 +153,6 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-
     public MessageResponseDto updateStudent(UpdateUserDto userDto) {
         User user = userRepository.findById(userDto.getId())
                 .orElseThrow(() -> new NotFoundException("Пользователь с id " + userDto.getId() + " не найден", HttpStatus.BAD_REQUEST));
@@ -150,4 +164,40 @@ public class UserServiceImpl implements UserService{
         userRepository.save(user);
         return new MessageResponseDto("Данные успешно изменены");
     }
+
+    @Override
+    public MessageResponseDto updateAdmin(UpdateAdminDto adminDto) {
+        User user = userRepository.findByUsername(adminDto.getUsername()).get();
+        user.setUsername(adminDto.getUsername());
+        user.setFio(adminDto.getFio());
+        user.setPosition(adminDto.getPosition());
+        user.setAddress(adminDto.getAddress());
+        user.setUniversity(adminDto.getUniversity());
+        user.setPhoneNumber(adminDto.getPhoneNumber());
+        userRepository.save(user);
+        return new MessageResponseDto("Данные сохранены");
+    }
+
+    @Override
+    public List<User> findAllUsersChat(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден", HttpStatus.BAD_REQUEST));
+        Set<User> allUsers = new HashSet<>(user.getSubscribers());
+        allUsers.addAll(user.getSubscriptions());
+        allUsers.remove(user);
+        return new ArrayList<>(allUsers);
+    }
+
+    @Override
+    public MessageResponseDto addChat(String senderUsername, String recipientUsername) {
+        User sender = userRepository.findByUsername(senderUsername).get();
+        User recipient = userRepository.findByUsername(recipientUsername).get();
+        Set<User> subscribers = sender.getSubscribers();
+        subscribers.add(recipient);
+        sender.setSubscribers(subscribers);
+        userRepository.save(sender);
+        return new MessageResponseDto("Чат добавлен");
+    }
 }
+
+

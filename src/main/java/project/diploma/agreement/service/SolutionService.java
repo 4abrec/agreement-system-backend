@@ -16,5 +16,7 @@ public interface SolutionService {
 
     MessageResponseDto save(Integer taskId, String username, String text);
 
+    MessageResponseDto update(Integer taskId, Integer solutionId, String text, String username);
+
     MessageResponseDto agreementSolution(Integer solId, Integer mark, String comment, Boolean isAgree, String username);
 }

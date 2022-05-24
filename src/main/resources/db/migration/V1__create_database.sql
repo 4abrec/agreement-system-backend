@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS role
     "name" varchar(25) NOT NULL
 );
 
+
+
 CREATE TABLE IF NOT EXISTS users
 (
     "id"           serial       NOT NULL
@@ -16,8 +18,41 @@ CREATE TABLE IF NOT EXISTS users
     "group_number" varchar(30)  NULL,
     "address"      varchar(255) NULL,
     "position"     varchar(255) NULL,
-    "phone_number" varchar(60)  NULL
+    "phone_number" varchar(60)  NULL,
+    "photo_url"    varchar(100) NUll
 
+);
+
+CREATE TABLE IF NOT EXISTS user_subscriptions
+(
+    "user_id"       int NOT NULL
+        CONSTRAINT user_subscriptions_fk0 REFERENCES users,
+    "subscriber_id" int NOT NULL
+        CONSTRAINT user_subscriptions_fk1 REFERENCES users,
+    CONSTRAINT user_subscriptions_pk
+        PRIMARY KEY (user_id, subscriber_id)
+);
+
+CREATE TABLE IF NOT EXISTS message
+(
+    "id"             serial    NOT NULL
+        CONSTRAINT message_pk PRIMARY KEY,
+    "text"           TEXT      NULL,
+    "datetime"       timestamp NOT NULL,
+    "recipient_user" varchar   NOT NULL,
+    "author_id"      int       NOT NULL
+        CONSTRAINT message_fk0 REFERENCES users
+);
+
+CREATE table image
+(
+    "id"      varchar(255) NOT NULL
+        CONSTRAINT image_pk PRIMARY KEY,
+    "name"    varchar(100) NOT NULL,
+    "type"    varchar(100) NOT NULL,
+    "data"    bytea        NOT NULL,
+    "user_id" int          NULL
+        CONSTRAINT image_fk0 REFERENCES users
 );
 
 CREATE TABLE IF NOT EXISTS user_role
@@ -87,15 +122,7 @@ CREATE TABLE IF NOT EXISTS comment
         CONSTRAINT comment_fk1 REFERENCES solution
 );
 
-CREATE table message
-(
-    "id"        serial    NOT NULL
-        CONSTRAINT message_pk PRIMARY KEY,
-    "text"      TEXT      NOT NULL,
-    "datetime"  timestamp NOT NULL,
-    "author_id" int       NOT NULL
-        CONSTRAINT message_fk0 REFERENCES users
-);
+
 
 CREATE table file
 (
@@ -109,4 +136,5 @@ CREATE table file
     "solution_id" int          NULL
         CONSTRAINT file_fk0 REFERENCES solution
 );
+
 
